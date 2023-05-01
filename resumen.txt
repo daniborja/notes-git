@@ -1,0 +1,888 @@
+// -------------------------------------------------------------------
+/** Primeros comandos
+			https://education.github.com/git-cheat-sheet-education.pdf
+
+	- git --help		<--		info
+			
+ * Config. Global que se utilizara en todos los proyecot.
+    - git config --global user.name "[firstname lastname]"
+    - git config --global user.email "[valid-email]"
+		- git config --list		<-  Ver la config
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Repositorios:
+	- git init			<--		Crear un Repositorio Local (.git)
+	- git add -A		<--		Mover ∀ (todo) los archivos del ET al AP
+	- git commit -m ''	<--		Crea el spanshot
+
+	- git status 		<--		Status de la Branch/Rama. Archivos Modifi.
+
+	- git reset --hard HEAD	<--		Restablecer el ultimo commit
+		Old School:
+		- git checkout -- . 	<--		Restablecer el ultimo commit
+
+
+ * Diferentes formas de Agregar archivos al Area de Preparaciona (AP) / Stage
+	- git add "*.txt"	<--		Agregar todos los .txt de TODO el Repositorio
+	- git add *.txt		<-- 	Agregar todos los .xtx del Current Directory
+	- git add --all		<--		Agregar TODO = git add -A
+	- git add <list files>	<--	Agregar archivos que listemos
+	- git add dir/		<--		Agregar todos los archivos del Directorio
+	- git add dir/*.pdf	<--		Agrega todos los .pdf del Directorio especif
+
+
+ * Remover/Excluir un archivo del AP/Stage
+	- git status		<--		Color verde :v
+
+	- git restore --staged  <file/FilePATH>
+	or: - git reset <file/FilePATH>
+
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Log
+	- HEAD: Ultimo commit en la Rama/Branch actual
+
+ * Otras formas de revisar el Log:
+			https://git-scm.com/docs/git-log
+
+	- git log				<--		A detalle
+	- git log --oneline		<--		Short Hash and Message
+
+	- git log --oneline --decorate --all --graph
+		--all				<--		∀ los commits de ∀ las Ramas/Branch
+		--decorate --graph	<--		De forma grafica
+
+	- git log --raw			<--		Detalle en donde mutaron
+		-n 5 				<--		5 Commits
+
+	- Formatear el log:
+		- git log --pretty=format:"The author of %h was %an, %ar%nThe title was >>%s<<%n"
+
+ * Status
+	- git status -s			<--		Resumen archvos modif q No estan en el Stage
+	- git status -sb		<--		↑ and current branch
+	
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Creando Alias para nuestros comandos
+	- git config --global alias.<command> 'commands to be summarized'
+		Ex.: git config --global alias.lg 'log --oneline --decorate --all --graph'
+			- git lg
+		Ex.: git config --global alias.s 'status -s -b'
+			- git s
+
+	- git config --global --list	<--		Ver nuestros alias
+
+*/
+
+
+
+
+
+
+//	-------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////
+ ** Diferencias entre Commits y Restaurazion de archivos
+ * Commits
+	- git commit -m ''		<--		Hacer un commit
+	- git commit -am ''		<--		Commit de archivos MODIFICADOS.
+									No para archivos creados recientemente.
+
+ * Revisar cambios realizados en cada archivo (comparar Reposit con ET)
+	- git diff <file/FilePATH>		<--		Detalladamente
+		(-) 1L de codigo eliminada
+		(+)	1L de codigo agregada
+
+	- git diff --staged 		<--		Comparar Repositorio con Staged/AP
+
+	- git checkout -- <file/FilePATH>	<--	Revertir cambios
+	- git reset --hart  de ese archivo
+
+	- Mostrar los cambios en numeros (estadisticas), sin especificar.
+		- git diff --stat <file/FilePATH>
+*/
+
+misiones-completadas.md updated
+
+//	-------------------------------------------------------------------
+ ** Actualizar/Corregir/Editar menssage del ultimo commit
+	- git commit --amend -m ''
+
+ * Modificar archivos sin crear un nuevo commit. Reeutilizar/Reciclar commit
+	- git reset --soft HEAD^
+	- Modificar archivos
+	- git commit -am ''
+ 
+ ****
+	>>>> - Establecer nvim como editor de git
+		git config --global core.editor nvim
+
+	- git commit			<--		Multi-line message
+	- git commit --amend	<--		Correct the Multi-line message
+*/
+
+
+
+
+//	-------------------------------------------------------------------
+ ** Viajes en el tiempo / Navegar entre Commits
+	- git reset <CommitHASH / HEAD>		<--		Regresar al commit SIN Perder los cambios
+	- git reset --hart <CommitHASH / HEAD> <--	Regresar al commit Perdiendo los cambios
+ 
+	- Regresar al Commit Acutal sin importar los reset --hard que hayamos hecho:
+		- git reflog		<--		Ver el Historial, sin importar los reset hard
+		- git reset --hart <CommitHASH / HEAD>	<--	Regresar al Current Commit
+
+
+ * Renombrar y/o Eliminar archivos usando GIT: Enseguida el Commit
+	- git mv 'oldName' 'newName'	<--		Cambiar el nombre de un archivo
+		- commit...
+
+	- git rm 'fileName'				<--		Eliminar archivo
+		- commit...
+
+
+ * Renombrar y/o Eliminar archivos sin GIT: Primero actualizar
+	- Renombrar desde fuera
+		- git add -u					<--		Actualizar al staged
+		- git add -a
+		- commit...
+
+	- Eliminar desde fuera
+		- git add -u
+		- commit...
+
+ * Ignorar archivos
+	- Crear el archivo .gitignore
+		- Acepta expresiones:   *.log  ||  logs/
+*/
+
+
+
+
+
+
+//	-------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////
+ ** 4. Ramas, uniones, conflictos y tags
+ * Rama/Branch: Linea de tiempo de commits.
+	- AL final se va a unir a la Rama original o se va a elimianr.
+
+ * Ramas / Branches
+	- git branch                    <--     Lista todas las ramas
+    - git branch newBranchName   	<--     Crear ramas nuevas
+	- git switch branchName       	<--   	Cambiar de rama
+		Old School:
+    		- git checkout branchName
+
+	- git branch -D branchName		<--		Eliminar rama
+
+
+
+ * Merge
+	- Fast-forward: GIT detecta que la rama principal no ha presentado cambios, por tanto hace el merge.
+	- Auto-mergin: Los cambios entre ramas NO afectan a las mismas lineas de codigo. GIT hace el merge.
+	- Manual Merger: Las mismas lineas de codifo fueron modificadas en distintas ramas. Por tanto GIT entra en conflicto y nos pide resolverlo de forma manual para luego crear el Merge Commit.
+
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Merge
+ * Fast-forward:
+	- git switch branchName       <--	Rama a la que queremos Agregar el codigo nuevo
+	- git merge branchName          <--	Rama que contiene el codigo nuevo
+	- git s		                  <--	Verificar que no se hizo un commit, but merge it
+
+	- git branch -D branchName	  <--	Eliminar una rama despues de fusionarla
+ 
+
+ * Auto-mergin:
+	- git switch -c newBranch		<--	Crear rama y movernos a ella 
+	- git merge branchName          <--	Rama que contiene el codigo nuevo
+		- Se abre nvim <- Dar el message del commit
+
+
+ * Manual Merger:
+	- Resolver el conflicto de forma manual
+	- Commit
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Tags - Etiquetas 
+ * Tags: Son una referencia a un commit especifico
+ 	- Normalmente utilizado para marcar versiones de un software
+
+	- git tag <TagName>		<--		Crear un Tag
+	- git tag				<--		Ver los Tags
+	- git tag -d <TagName>	<--		Eliminar un Tag
+
+	- git tag -a <version> -m ''				<--	Tag al ultimo commit
+	- git tag -a <version> <shortHash> -m ''	<--	Tag a un commit en especifico
+	- git show <version>						<-- Ver info de un tag a detalle
+
+*/
+
+
+
+
+
+
+
+//	-------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////
+ ** Git Stash y  Git Rebase - Para realizar cambios de emergencia
+ * Stash: Guardar cambios temporales en una "caja" para luego poderlos traer de vuelta.
+
+	- git stash			<--		Crea el Stash y restaura el ultimo commit 
+									git lg: Work in progress (WIP) on BranchName
+
+	- git stash pop		<--		Restaura/Extrae el Ultimo stash y lo elimina del Stash List
+		- git lg 		<-		Ya no aparece el stash
+
+
+ * Conflictos con el Stash
+	- Es como una resolucion de conflictos normal cuando se hace un Merge, solo que con Stash
+		- git stash pop		<-- 	Lo extrae, pero NO lo elimina
+		- Resolver conflictos manualmente
+		- Commit...
+		- git stash drop 	<--		Eliminar manualmente el ultimo Stash
+		- git stash list 	<--		Verificar que se elimino el Stash
+
+
+ * Mas info sobre el Stash
+	- git stash 					<-- 	Crea el stash y restaura el Ultimo Commit
+	- git stash list 				<--		Lista todos los stash con su stahsID
+	- git stash apply				<--		Restaura/Extrae el ultimo Stash
+	- git stash apply <stahsID>		<--		Restaura/Extrae el Stash especificado
+	- git stash drop				<--		Elimina el Ultimo Stash
+	- git stash drop <stahsID>		<--		Eliminar el Stash espesificado
+	- git stash pop					<--		Restaura el ultimo Stash y lo elmina del stash list
+
+	- git stash save --keep-index			<--		Guarda ∀ menos los archivos del Stage/AP
+	- git stash save --include-untracked	<--		∀ incluido los que no se les da seguimiento
+
+	- git stash list --status		<--		Estadist. de la Stash List
+	- git show stash				<--		Cambios en las lineas de codigo del Ultimo Stash
+	- git show stash <stahsID> 		<--		Cambios en las lineas de codigo del Stash especificado
+
+	- git stash save ''				<--		Agregar un message en el Stash que vamos a crear
+
+	- git stash clear				<--		Limpia todo el Stash List sin opcion a recuperar nada
+*/
+
+
+
+
+//	-------------------------------------------------------------------
+ ** Rebase
+ * Nos sirven para:
+		- Ordenar Commits
+		- Corregir mensajes de los commits
+		- Unir commits
+		- Separar commits
+
+ * Agregar los commits de una Rama 2ria a la Rama Principal/Master
+	- Los commits de la 2ria se pondran al final de la rama Principal respetando su orden anterior.
+		- git switch <branch2ria>		<--		Rama 2ria de la que queremos traer los commits.
+		- git rebase <mainBranch>		<--		Rama principal que obtendra los commits de la 2ria.
+		- git switch <mainBranch>
+		- git merge <branch2ria>
+		- git branch -D <branch2ria>
+
+
+ * Rebase Squash: Si tenemos 2 commits que deberian ser el mismo. Fusionar el commit actual con el anterior.
+	- Fusionar commits: 1 Squash solo fusiona 2 commits consecutivos
+		- git rebase -i HEAD~<numCommit>	<--	Abre el editor con la cantidad especificada
+			- s				<--		En el ultimo commit que queremos fusionar con el anterior.
+			- Damos el Message al commit resultante de la fusion.
+
+
+ * Rebase Reword: Renombrar commits
+	- git rebase -i HEAD~1 / <numCommit>
+		- r			<--		Cambiamos pick por r
+		- Ya cambiar el Message
+
+
+ * Rebase Edit:
+	- Deshacer los cambios en un archivo y sacarlo del Stage
+		- git checkout -- <fileName>
+
+	- Rebase para deshacer un commit y convertirlo en multiples commits:
+		- git rebase -i HEAD~2
+			- e
+			- git reset HEAD^
+			- git add <-A / fineName>
+			- Commits
+		- git rebase --continue
+*/
+
+
+
+
+
+
+
+//	-------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////
+ ** Inicios en GitHub, Git Remote, Push & Pull
+ * GitHub: Plataforma de desarrollo colaborativo de software para alojar proyectos.
+	- Version gratuita:
+		- Repositorios ilimitados
+		- Static Pages
+		- Push, Pull, Clones ilimitados
+		- Issues, wikis, estadisticas ilimitadas
+		- Crear Repositorios Privados y Publicos
+	
+	- Crear un Repositorio Remoto:
+		- git remote add <origin> <url>
+			- add		<-	New Remote
+			- <origin>	<-	Remote Name
+
+	- git remote -v		<--		Listar las fuentes remotas agregadas a nuestro Repositorio
+		- fetch
+		- Push
+
+
+	- git push -u origin master
+		- origin 		<-		Remote Name
+		- master		<-		Rama que vamos a enviar al Remote Repo
+		- -u 			<-		Hacer un proximo push sin especificar la rama
+
+*/
+
+
+
+//	-------------------------------------------------------------------
+** Push a GitHub
+	- Crear en GitHub
+	- git remote add origin <url>
+	- git push -u origin master
+
+	- git remote -v
+
+
+ * Push de los Tags
+	- git push --tags		<--		Subir ∀ los tags 
+
+
+ * Pull de los ultimos cambios en el repo de GitHub
+	- git pull			<--		Descarga los cambios y hace un Merge Fast-forward
+
+
+ * Clonar un repositorio Remoto
+	- git clone <url>
+	- git clone <url> <newName>		<--		Cambiar nombre al repo clonado
+	
+
+ * Git fetch y Git Pull:
+	- Realizar un fetch/pull Antes de subir nuestros cambios es una Buena Practica.
+		- guit fetch		<--		Descarga los cambios SIN hacer un merge automatico
+		- git pull
+			- Commit window
+		- git push
+
+*/
+
+
+
+//	-------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////
+ ** GitHub - Básico
+ * Introduccion a la interfaz de GitHub
+	- Code: Pestana por defecto.
+	- Issues: Realizar preguntas/conversar con los duenos del repo
+	- Pull request: En donde personas ajenas al repo agregan codigo/cambios
+	- Projects: 
+	- Wiki:	Podemos crear documentacion para el repo
+	- Setting
+		- 
+	- Insights: Info estadistica sobre el repo
+
+
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Markdown
+		https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf
+		https://www.markdowntutorial.com/
+		https://www.webfx.com/tools/emoji-cheat-sheet/
+	
+	- ![Batman](url)		<--		Agregar imagenes
+	- ** ... **				<--		Bold
+	- _ ... _ || * ... *	<--		Italic
+
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Buscando archivos en GIT
+	- Go to file: Buscar archivos en GitHub
+	- 3.verticales: Copiar PATH
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Raw, Blame, History, Edit and Delete
+	- Raw: Ver el archivo en Crudo/Texto plano
+	- Blame: Ver el estado del Codigo en cada commit.
+	- History: Ver los commits, sus Hash, fechas y demas.
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Crear un Nuevo Archivo en GitHub / En Otra Rama/Branch
+	- Add file
+	- Nombrar & Create pull request
+	- Git revisa si puede fusionar las ramas de forma Limpia
+		- Si hay conflictos, simplemente los solucionamos manualmente
+	- Create a merge commit
+		- Confirme merge
+		- Delete Branch
+	
+	- git pull		<--		Traer las actualizaciones al repo local
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Crear un nuevo archivo en Master
+	- Simplemente crearlo en la rama master
+	- git pull
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Renombrar, borrar y sincronizar el repositorio local
+	- No es una buena practica hacer estas modificaciones desde GitHub
+	- Todo esto debemos hacerlo desde nuestro repo local en GIT
+
+		- git fetch
+		- git pull
+		- git s
+ 
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Commentarios en los commits desde GitHub
+	- Vamos al History 
+	- Accedemos al commit en el que queremos hacer un comentario
+		- Podemos comentar cada linea del codigo
+		- Podemos establecer un comentario general
+	
+	- Regresamos al Code
+	- En History podemos ver un Icon con la cantillas de comentarios q tiene un commit
+ 
+*/
+
+
+
+
+
+
+
+//	-------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////
+ ** GitHub - avanzado
+ * Fork, Clone Y Colaboraciones
+	- Fork: Hacer coloboraciones a un Repo que no es nuestro.
+		- Clonar todo el repo de 3ros a nuestro GitHub
+		- Hacer un pull request para ellos evaluen y decidan include/exclude it
+		- Para colaborar con el codigo al que no tenemos acceso para hacer push
+		- Para trabajar con companeros que no saben mucho. No se expone el repo
+
+
+
+ ** Cloning y fork:
+	- Click en el btn Fork
+	- git clone <url>
+	- git push .. etc
+
+
+ ** Pull Request
+	- En el repo que hicimos fork
+		- Contribute
+			- Open pull request
+			- Nombrar y demas
+		- Hacer lo que me pida :v
+		
+
+	- Yo como dueno verdadero
+		- Revisar cambios
+		- Aprovar
+		- Merge / Squash para que no me haga otro commit
+		- Ver que el codigo se actualizo en al rama correspondiente
+
+
+
+ ** Actualizando nuestro Fork
+	- Duenos del Repo Original:
+		- Modificar archivos
+		-  Create a new branch for this commit and start a pull request
+			- Propose 
+			- Create pull request
+		- Revisar
+		- Squash and merge 
+
+
+ * Debemos hacer esto cada vez que un Pull request sea Aprovado en el upstream.
+	- El que hizo el Fork
+		- No sabe de los cambios que hizo el Dueno en su Repo
+		- Vamos al Repo origial
+			- Copiamos la URL para un upstream
+			- git remote add upstream <urlRepoOriginal>
+				- Es una convencion llamarlo upstream
+				- upstream para nosotros es el repo Orginal 
+				  al cual no podemos hacer pull
+			- git remote -v
+				- 2 remotes adicionales a los que solo podemos hacer fetch
+		- git pull upstream <branchName>
+
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** 7. Introduccion a los flujos de trabajo
+	- Feature Branch: Una rama por devel a aprtir de un ultimo commit comun.
+		- git fetch
+		- git branch -a 			<--			Ver todas las ramas locales/remotas
+		- git checkout branchName
+
+	- Cuando ya este listo para el push
+		- El devl que ya termino hace un push a su GitHub
+		- Solicita un Pull Request
+		- El resto del procedimiento.
+ 
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Feature Branch - Flujo de trabajo mediante pull request
+	- Hacemos modificaciones en una Rama 2ria
+	- Si queremos que pertenezcan al master 
+		- Pull request
+		- New pull request
+			- Seleccionamos la rama a la que queremos hacer el Pull Request
+			- Seleccionamos la rama con la que queremos hacer el pull request
+			- Create pull request
+				- Message in Markdown
+				- Create pull request
+			- Revisar entre todo el equipo
+			- Merge/Squash/Reverse
+			- Confirm Merge/s/r
+			- Delete Branch
+
+	- Actualizar el master local con el remoto que ya Aprovo el pull request
+			- git switch master
+			- git pull
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Creando Tags y subirlos a GitHub
+	- git tag -a v1.0.0 -m 'Version 1.0.0 ready for production'	<- Creamos tag
+	- git tag -a v0.0.1 34db551 -m 'Alpha'		<-- Tag a un commit especifico
+ 
+	- git tag -a v0.0.1 151b669			<--		Tag con el edito nvim a un commit en esp.
+	- git push --tags								<--		Push a GitHub
+
+	- Semantic Versioning:		https://semver.org/
+			v0.1.2		==		CambioMayor.menor.parche
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Rama de Produccion
+	- Subir un tag
+	- Hacer cambios
+	- Pull request
+		- Reverse para tener 2 commits independientes
+
+	- Elminar rama remota desde la terminal
+		- git branch -a		<--		Ver todas las ramas
+		- git switch master 
+		- git branch -D branchName			<--	Eliminar del local
+		- git push origin :branchName		<--	Eliminar remota
+ 
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Releases - Versiones de produccion completadas
+	- Releases: 
+		- Nos permite compartir archivos binarios sin que github los revise
+		- Podemos proveer informacion adicional sobre el uso de el release.
+			- establecer como pre-release o release final
+ 
+*/
+
+
+
+
+
+
+//	-------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////
+ *** GitHub Issues, MileStones y Colaboradores
+ ** GitHub Issues
+	-	No solo sirven para resolver problemas, tambien sirven para 
+	
+	- Crear un Issues:
+		- Issues
+			- New Issue
+				- Dar un Titulo Muy descriptivo xq esto lo va a ver ∀ mundo
+				- Comment en Markdown
+				- Submit new issue
+
+				- Despues de enviar el Issues ∀ los colaboradores van a recibir un
+					email notificando q hay 1 issue abierto
+				- Si es publico te van a bombardear el email con notificaciones, asi
+					q puedes desuscribirte:    btn Unsuscribe
+				
+		- Issues
+			- Nos muestra los Issues Abiertos gracias a un filtro automatico: is:issue is:open
+			- Si eliminamos ese filtro nos muestra issues, Closed and pull request
+			
+
+ * Cerrar un Issue:
+	- Issues
+		- Click a 1 q este abierto
+			- Comment
+			- Close Issue
+			
+	- Reopen issue:
+		- Issues
+			- Closed
+				- Click en 1 issue cerrado (Aqui todavia pueden seguir comentando el issue pese a estar cerrado)
+					- Comment 
+					- Reopen issue
+
+				- Si queremos Evitar que externos sigan comentando (now only collaborators):
+					- Lock conversation
+						- Lock conversation on this issue
+
+
+	-- Subir 1 cambio a GitHub, anexalro al Issue y cerrarlo de inmediato
+		- Dentro del message del commit colocar:  fixes #NumIssue
+				- git commit -am 'Adding Nick Fury fixes #3'
+		- git push
+		- Revisar los issues: Ya se cerro el issue
+
+	
+ * Labels - Etiquetas
+	- Labels: Organizar de mejor manera nuestros Issues
+
+	- Crear un label:
+		- Issues
+			- Labels
+				- New label
+			
+	- Crear un nuevo Issue con Labels
+		- Issues
+			- New issue
+				- Labels
+					- Seleccionamos los q sean
+				- Submit new issue
+			
+		- Issues
+			- Podemos filtrar por Labels
+
+*/
+
+
+
+//	-------------------------------------------------------------------
+ *** MileStones 
+	- Son grupos de Issues, Caracteristicas o una fecha dentro de 1 periodo
+		de tiempor que es importante.
+	- Ejemplos:
+		- Beta Launch: Errores que necesitamos arreglar antes del lanzamiento
+		- Obtober: Issues que nos gustaria resolver en Octubre. Mantener el enfoque
+		- Re-diseno: Issues relacionadas al diseno del proyecto, es 1 excelente forma
+			para mantener las ideas y trabajo enfocados en el mismo punto.
+	
+	- Crear un MileStone:
+		- Issues
+			- New Issue
+				- Milestone
+					- Crear si no existe / Selec el q queremos
+					- Submit new Issue
+			
+		- Issues
+			- MileStones
+				- Vemos los milestones que tenemos
+				- Click en el que nos interesa
+					- Vemos todos los Issues que tiene ese milestone
+					- A medida que resolvemos los issues avanza la barra del milestone
+				- Podemos cerrar el milestone y demas.
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Agregando colaboradores a un repositorio
+	- Los colaboradores tiene control total del Repositorio
+	
+	- Vamos al Repo al que queremos agregar colaboradores:
+		- Setting
+			- Manage access
+				- Invite collaborator
+					- Colocar el user name / email / id
+					- Ok
+				
+		
+		- Le llega un email al colaborador
+			- View
+			- Aceptar ser colaborador
+			- Ya tenemos control del repo
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** Asociando commits a issues
+	- Crear el Issue
+		- En el comentario: #NumIssue		<--  Eso es todo
+
+*/
+
+
+
+
+
+
+
+//	-------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////
+ *** Wikis, Proyectos y GitHub Pages
+ INTRO:
+		- Wikis: Como wikipedia :v. Crear info sobre como funciona el proyecto
+		- Proyecto: Util para los Admin de Proyectos
+		- GitHub Pages: Publicar Static webpages
+
+
+ ** Wiki:
+	- wiki
+		- Create the first page
+			- The first page should be called Home.
+			- Contenido en Markdown
+			- Save Pages
+				- Crea una pagina en la que podemos agregar contenido.
+				- Podemos crear varias pag. GitHub dara un URL unico a cada una como en un SW.
+		
+	
+ * Agregando refernecias entre pag. de la Wiki
+	- Seleccionar el anchor text
+	- Link
+		- El nombre del link debe ser el Mismo de la pagina a la que vamos a vincular
+
+
+
+ ** Projects in GitHub 
+	- Projects
+		- Create project
+			- Name & description
+			- Save Project
+		
+		- Se crea un dashboard en el que podemos agregar columnas (to do list)
+			- En cada colimna podemos escribir algo
+			- Ese algo puede ser convertido en un Issue.
+
+ 
+
+ ** GitHub Pages
+ * Markdown:
+	- Se puede crear una con solo una plantilla en Markdown
+		- Se crea el Repositorio con la sigueinte estructura:
+				userNameGitHub.github.io
+
+
+ * Static webpage:
+	- Crear un nuevo repositorio
+		- Subir el website
+		- Se suele subir la carpeta  /docs
+
+
+ ** Insights:
+	- Nos da mucha informacion sobre como esta trabajando el equipo.
+
+	- Pulse
+		- Informacion relativa del estado del proyecto. Max 1 mes
+			- Resume todo: Pull request que han hecho merge, pendientes, etc.
+
+	- Todos lo demas son graficos	
+ 	
+	*/
+
+
+
+
+//	-------------------------------------------------------------------
+ ** 
+ 
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** 
+ 
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** 
+ 
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** 
+ 
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** 
+ 
+*/
+
+
+
+//	-------------------------------------------------------------------
+ ** 
+ 
+*/
+
+
+
+
+
